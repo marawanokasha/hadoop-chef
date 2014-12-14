@@ -1,0 +1,13 @@
+127.0.0.1 localhost
+
+
+<% @nameNode.each do |ip,hostName| %>
+<%= ip %> <%= hostName %>
+<% end %>
+
+<% @dataNodes.each do |dataNode| %>
+<% dataNode.each do |ip,hostName| %>
+<%= ip %> <%= hostName %>
+<% end %>
+<% end %>
+

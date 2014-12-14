@@ -1,0 +1,9 @@
+{
+  "run_list": [ "recipe[hadoop-chef::formathdfs]" ],
+  "hadoop-config": {"namenode":{"ip":"172.16.19.102", "hostname":"dev1-namenode"},
+		    "secondary-namenode": {"ip":"172.16.19.102"},
+                    "datanodes": [{"172.16.19.103" : "dev1-datanode-1"},
+                                  {"172.16.19.104" : "dev1-datanode-2"}
+				 ]
+                   }
+}
