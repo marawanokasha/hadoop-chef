@@ -5,4 +5,8 @@
 		<name>fs.default.name</name>
 		<value>hdfs://<%= @nameNodeIp %>:<%= @hdfsPort %></value>
 	</property>
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<value><%= @tempDirectory %></value>
+	</property>
 </configuration>
