@@ -12,4 +12,4 @@ Usage:
 - The same goes for the format recipe (formathdfs.json) and the start recipe (startserver.json)
 - solo.rb just contains the path to your cookbooks, modify as necessary according to where you cloned the repo
 - To run make sure you have chef installed: $ curl -L https://www.opscode.com/chef/install.sh | sudo bash 
-- Then run the script specifying the correct json config file: $ sudo chef-solo -c solo.rb -j setup.json
+- Then run chef-solor specifying the correct json config file: $ sudo chef-solo -c solo.rb -j setup.json
