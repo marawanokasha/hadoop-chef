@@ -54,8 +54,8 @@ puts("Configuring NameNode: " + isNameNode.to_s)
 ####### Create hadoop and temp directories
 [ hadoop_path, workspace_path ].each do |path|
   directory path do
-    owner 'ubuntu'
-    group 'ubuntu'
+    owner "#{hadoop_user}"
+    group "#{hadoop_user}"
     mode '0755'
   end
 end
@@ -67,8 +67,8 @@ hadoop_source_url = node['general-config']['hadoop-source-url']
 remote_file hadoop_tar do
         source hadoop_source_url
         mode "0777"
-        owner "ubuntu"
-        group "ubuntu"
+        owner "#{hadoop_user}"
+        group "#{hadoop_user}"
         not_if { File.exists?(File.join(hadoop_path,'etc')) }
 end
 
@@ -174,6 +174,7 @@ execute "create ssh key" do
   command "ssh-keygen -q -t rsa -N '' -f /home/#{hadoop_user}/.ssh/id_rsa"
   creates "/home/#{hadoop_user}/.ssh/id_rsa"
   action :run
+  user "#{hadoop_user}"
   only_if {isNameNode}
 end
 # Must be done so that we don't get the "unknown host" prompt that requires user interaction when doing the ssh-copy-id.
@@ -189,14 +190,14 @@ ruby_block 'disable strict host key checking' do
     fe.insert_line_if_no_match('StrictHostKeyChecking', "StrictHostKeyChecking no")
     fe.write_file
   end
-  only_if {File.open('/etc/network/interfaces').read().index('StrictHostKeyChecking')}
+  not_if {File.open(ssh_config_file).read().index('StrictHostKeyChecking')}
 end
 # Loop over all datanodes and copy the namenode's public key to them
 dataNodes = node['hadoop-config']['datanodes']
 dataNodes.each do |dataNode|
     dataNode.each do |ip,hostName|
         execute "ssh-key-copy" do
-                user 'ubuntu'
+                user "#{hadoop_user}"
                 command "sshpass -p #{hadoop_user_pass} ssh-copy-id -i ~/.ssh/id_rsa.pub #{hadoop_user}@#{ip}"
                 action :run
                 only_if {isNameNode}
@@ -205,8 +206,9 @@ dataNodes.each do |dataNode|
 end
 name_node_ip = node['hadoop-config']['namenode']['ip']
 execute "ssh-key-copy-local" do
-                user 'ubuntu'
-                command "sshpass -p #{hadoop_user_pass} ssh-copy-id -i ~/.ssh/id_rsa.pub #{hadoop_user}@#{name_node_ip}"
+                user "#{hadoop_user}"
+                # For some reason the strict host key checking disabling in the .ssh/config file doesn't take effect here so we have to do it explicitly
+                command "sshpass -p #{hadoop_user_pass} ssh-copy-id -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pub #{hadoop_user}@#{name_node_ip}"
                 action :run
                 only_if {isNameNode}
 end

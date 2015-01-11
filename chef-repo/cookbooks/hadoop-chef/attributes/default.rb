@@ -8,6 +8,7 @@ default['general-config']['java-path'] = '/usr/lib/jvm/java-7-openjdk-amd64/'
 default['general-config']['hadoop-install-path'] = '/home/ubuntu/hadoop'
 # Used inside hadoop to store temporary system files, very important to be outside of /tmp where it is by default
 # because in that case, it would be deleted after every stop of hadoop and the cluster wouldn't be able to start again
+# this directory doesn't have to exist beforehand
 default['general-config']['hadoop-temp-path'] = '/home/ubuntu/hadoop-tmp'
 # Where to download temp files
 default['general-config']['workspace-path'] = 'home/ubuntu/hadoop-workspace'
