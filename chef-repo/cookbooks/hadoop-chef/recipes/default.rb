@@ -120,7 +120,7 @@ template File.join(hadoop_path, 'etc/hadoop/core-site.xml') do
         variables ({
                 :nameNodeIp => node['hadoop-config']['namenode']['ip'],
                 :hdfsPort => node['hadoop-config']['hdfs-port'],
-		:tempDirectory => node['hadoop-config']['hadoop-temp-path']
+		:tempDirectory => node['general-config']['hadoop-temp-path']
         })
 end
 
